@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VEOS — Creative Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    :root {
+      --bg:       #f8f8f6;
+      --white:    #ffffff;
+      --text-1:   #0f0f0f;
+      --text-2:   #5c5c5c;
+      --text-3:   #9a9a9a;
+      --line:     rgba(0,0,0,0.08);
+      --sh-xs:    0 2px 12px rgba(0,0,0,0.04);
+      --sh-sm:    0 8px 32px rgba(0,0,0,0.06);
+      --sh-md:    0 20px 56px rgba(0,0,0,0.08);
+      --ease:     cubic-bezier(0.22, 1, 0.36, 1);
+      --t-fast:   0.22s var(--ease);
+      --t:        0.55s var(--ease);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── NAV ── */
+    #nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 200;
+      padding: 28px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: padding var(--t), background var(--t), box-shadow var(--t);
+    }
+
+    #nav.scrolled {
+      padding: 18px 52px;
+      background: rgba(248,248,246,0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 var(--line);
+    }
+
+    .nav-logo {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.92);
+      transition: color var(--t);
+    }
+    #nav.scrolled .nav-logo { color: var(--text-1); }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.65);
+      transition: color var(--t-fast);
+    }
+    .nav-links a:hover { color: var(--white); }
+    #nav.scrolled .nav-links a { color: var(--text-2); }
+    #nav.scrolled .nav-links a:hover { color: var(--text-1); }
+
+    .nav-btn {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.88);
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.38);
+      padding: 10px 24px;
+      border-radius: 100px;
+      transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+    }
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.72);
+      transform: translateY(-1px);
+    }
+    #nav.scrolled .nav-btn {
+      color: var(--white);
+      background: var(--text-1);
+      border-color: var(--text-1);
+    }
+    #nav.scrolled .nav-btn:hover {
+      background: #2a2a2a;
+      border-color: #2a2a2a;
+      box-shadow: var(--sh-sm);
+    }
+
+    /* ── LAYOUT ── */
+    .wrap { max-width: 1240px; margin: 0 auto; padding: 0 52px; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      height: 100dvh;
+      min-height: 680px;
+    }
+
+    .hero-video {
+      position: absolute;
+      top: -15%;
+      left: 0;
+      width: 100%;
+      height: 130%;
+      object-fit: cover;
+      will-change: transform;
+      transform-origin: center center;
+      pointer-events: none;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right,  rgba(0,0,0,0.58) 0%, rgba(0,0,0,0.14) 52%, transparent 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, transparent 35%, transparent 60%, rgba(0,0,0,0.28) 100%);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 58%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 52px;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.3s var(--ease) forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(60px, 9vw, 128px);
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -0.05em;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s var(--ease) forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(255,255,255,0.32);
+    }
+
+    .hero-bottom {
+      margin-top: 40px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.75s var(--ease) forwards;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      line-height: 1.72;
+      color: rgba(255,255,255,0.58);
+      max-width: 300px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-section {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 22px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-track {
+      display: inline-flex;
+      animation: marquee 22s linear infinite;
+    }
+
+    .marquee-item {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      padding: 0 44px;
+      border-right: 1px solid var(--line);
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── SERVICES ── */
+    .services { padding: 120px 0 100px; }
+
+    .services-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 72px;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: clamp(38px, 4.5vw, 62px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--text-1);
+    }
+
+    .services-intro {
+      font-size: 15px;
+      line-height: 1.72;
+      color: var(--text-2);
+      max-width: 290px;
+      text-align: right;
+    }
+
+    .service-item {
+      display: grid;
+      grid-template-columns: 72px 1fr auto;
+      align-items: center;
+      gap: 48px;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .service-item:first-child { border-top: 1px solid var(--line); }
+
+    .service-item:hover .service-name { transform: translateX(8px); }
+
+    .service-num {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+    }
+
+    .service-name {
+      font-size: clamp(22px, 2.6vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-1);
+      margin-bottom: 9px;
+      transition: transform var(--t);
+    }
+
+    .service-desc {
+      font-size: 14px;
+      line-height: 1.68;
+      color: var(--text-2);
+      max-width: 500px;
+    }
+
+    .service-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      max-width: 240px;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 5px 12px;
+      border-radius: 100px;
+    }
+
+    /* ── NUMBERS ── */
+    .numbers-section {
+      background: var(--text-1);
+      padding: 96px 0;
+    }
+
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .num-card {
+      padding: 60px 52px;
+      background: var(--text-1);
+    }
+
+    .num-value {
+      font-size: clamp(52px, 6vw, 88px);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.88;
+      color: var(--white);
+      margin-bottom: 18px;
+    }
+
+    .num-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── APPROACH ── */
+    .approach { padding: 120px 0; }
+
+    .approach-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 96px;
+      align-items: start;
+    }
+
+    .approach-steps { margin-top: 56px; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 24px;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .step:first-child { border-top: 1px solid var(--line); }
+
+    .step-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+      padding-top: 3px;
+    }
+
+    .step-name {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-2);
+    }
+
+    .approach-statement {
+      font-size: clamp(26px, 3vw, 42px);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      color: var(--text-1);
+      margin-bottom: 28px;
+    }
+
+    .approach-statement em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--text-3);
+    }
+
+    .approach-body {
+      font-size: 15.5px;
+      line-height: 1.82;
+      color: var(--text-2);
+      margin-bottom: 14px;
+    }
+
+    /* ── CTA ── */
+    .cta-section { padding: 0 0 120px; }
+
+    .cta-inner {
+      background: var(--white);
+      border-radius: 28px;
+      padding: 88px 80px;
+      box-shadow: var(--sh-md);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 48px;
+    }
+
+    .cta-text h2 {
+      font-size: clamp(34px, 4vw, 56px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.04;
+      color: var(--text-1);
+      margin-bottom: 16px;
+    }
+
+    .cta-text p {
+      font-size: 15.5px;
+      line-height: 1.72;
+      color: var(--text-2);
+      max-width: 400px;
+    }
+
+    .cta-actions {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 34px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      border: none;
+      transition: transform var(--t-fast), box-shadow var(--t-fast), background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-dark {
+      background: var(--text-1);
+      color: var(--white);
+    }
+    .btn-dark:hover { background: #2a2a2a; box-shadow: 0 12px 30px rgba(0,0,0,0.18); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-1);
+      border: 1.5px solid rgba(0,0,0,0.15);
+    }
+    .btn-outline:hover { border-color: var(--text-1); box-shadow: var(--sh-sm); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.38);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.75);
+    }
+
+    .hero .btn-dark {
+      background: var(--white);
+      color: var(--text-1);
+    }
+    .hero .btn-dark:hover {
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 36px 52px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-1);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+      transition: color var(--t-fast);
+    }
+    .footer-links a:hover { color: var(--text-1); }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.72s var(--ease), transform 0.72s var(--ease);
+    }
+    .reveal.left  { transform: translateX(-28px); }
+    .reveal.right { transform: translateX(28px); }
+    .reveal.visible { opacity: 1; transform: translate(0); }
+
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       NAV
+  ═══════════════════════════════════════ -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">VEOS</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-btn">Start a Project</a>
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+  <section class="hero">
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="Porsche%20992%20Kling%20.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Brand direction &nbsp;·&nbsp; Convertable content &nbsp;·&nbsp; Content production</div>
+      <h1 class="hero-title">We help brands<br><em>to</em> attract.</h1>
+      <div class="hero-bottom">
+        <p class="hero-desc">
+          VEOS connects brands to consumers through identity, motion, and strategic creative direction built to perform.
+        </p>
+        <div class="hero-cta">
+          <a href="#contact" class="btn btn-dark">Start a Project</a>
+          <a href="#services" class="btn btn-ghost">Our Services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       MARQUEE
+  ═══════════════════════════════════════ -->
+  <div class="marquee-section" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Brand Identity</span>
+      <span class="marquee-item">Visual Direction</span>
+      <span class="marquee-item">Motion Design</span>
+      <span class="marquee-item">Brand Strategy</span>
+      <span class="marquee-item">Film & Video</span>
+      <span class="marquee-item">Creative Direction</span>
+      <span class="marquee-item">Positioning</span>
+      <span class="marquee-item">Art Direction</span>
+      <span class="marquee-item">Brand Identity</span>
+      <span class="marquee-item">Visual Direction</span>
+      <span class="marquee-item">Motion Design</span>
+      <span class="marquee-item">Brand Strategy</span>
+      <span class="marquee-item">Film & Video</span>
+      <span class="marquee-item">Creative Direction</span>
+      <span class="marquee-item">Positioning</span>
+      <span class="marquee-item">Art Direction</span>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       SERVICES
+  ═══════════════════════════════════════ -->
+  <section class="services" id="services">
+    <div class="wrap">
+
+      <div class="services-header">
+        <div class="reveal">
+          <p class="section-eyebrow">What We Do</p>
+          <h2 class="section-title">Full-spectrum<br>creative.</h2>
+        </div>
+        <p class="services-intro reveal right">From brand foundations to motion campaigns — every discipline your brand needs to break through.</p>
+      </div>
+
+      <div>
+        <div class="service-item reveal">
+          <div class="service-num">01</div>
+          <div>
+            <div class="service-name">Branding & Identity</div>
+            <p class="service-desc">We build brand systems from the ground up — naming, logo, typography, colour, and the full identity toolkit that makes your brand unmistakable and enduring.</p>
+          </div>
+          <div class="service-tags">
+            <span class="tag">Logo Design</span>
+            <span class="tag">Brand Guidelines</span>
+            <span class="tag">Visual Identity</span>
+            <span class="tag">Typography</span>
+          </div>
+        </div>
+
+        <div class="service-item reveal delay-1">
+          <div class="service-num">02</div>
+          <div>
+            <div class="service-name">Video & Motion</div>
+            <p class="service-desc">Brand films, commercials, and motion graphics that communicate who you are in seconds. We direct, shoot, and deliver work that moves people — literally.</p>
+          </div>
+          <div class="service-tags">
+            <span class="tag">Brand Films</span>
+            <span class="tag">Motion Graphics</span>
+            <span class="tag">Commercials</span>
+            <span class="tag">Direction</span>
+          </div>
+        </div>
+
+        <div class="service-item reveal delay-2">
+          <div class="service-num">03</div>
+          <div>
+            <div class="service-name">Creative Direction & Strategy</div>
+            <p class="service-desc">Strategic positioning and creative direction that aligns every touchpoint. We help brands find their voice, define their territory, and own it with conviction.</p>
+          </div>
+          <div class="service-tags">
+            <span class="tag">Positioning</span>
+            <span class="tag">Brand Strategy</span>
+            <span class="tag">Art Direction</span>
+            <span class="tag">Consulting</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       NUMBERS
+  ═══════════════════════════════════════ -->
+  <section class="numbers-section">
+    <div class="wrap">
+      <div class="numbers-grid">
+        <div class="num-card reveal">
+          <div class="num-value">50+</div>
+          <div class="num-label">Brands Built</div>
+        </div>
+        <div class="num-card reveal delay-1">
+          <div class="num-value">8+</div>
+          <div class="num-label">Years of Practice</div>
+        </div>
+        <div class="num-card reveal delay-2">
+          <div class="num-value">100%</div>
+          <div class="num-label">Client Retention</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       APPROACH
+  ═══════════════════════════════════════ -->
+  <section class="approach" id="approach">
+    <div class="wrap">
+      <div class="approach-grid">
+
+        <div>
+          <p class="section-eyebrow reveal">How We Work</p>
+          <h2 class="section-title reveal delay-1">Our<br>Approach</h2>
+
+          <div class="approach-steps">
+            <div class="step reveal">
+              <div class="step-num">01</div>
+              <div>
+                <div class="step-name">Discover</div>
+                <p class="step-desc">Deep dives into your market, audience, and ambitions give us the foundation everything else builds on. We listen before we talk.</p>
+              </div>
+            </div>
+            <div class="step reveal delay-1">
+              <div class="step-num">02</div>
+              <div>
+                <div class="step-name">Define</div>
+                <p class="step-desc">We establish your strategic territory — the positioning, the voice, the story — before a single pixel is designed.</p>
+              </div>
+            </div>
+            <div class="step reveal delay-2">
+              <div class="step-num">03</div>
+              <div>
+                <div class="step-name">Design & Direct</div>
+                <p class="step-desc">We craft the work: identity systems, motion, and campaign material built to perform across every channel.</p>
+              </div>
+            </div>
+            <div class="step reveal delay-3">
+              <div class="step-num">04</div>
+              <div>
+                <div class="step-name">Deliver</div>
+                <p class="step-desc">Full brand handoff with comprehensive guidelines, assets, and ongoing partnership to ensure the work lands and lasts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal right" style="padding-top: 8px;">
+          <p class="approach-statement">
+            Great brands aren't found —<br><em>they're built with intention.</em>
+          </p>
+          <p class="approach-body">
+            At VEOS, we believe the most powerful brands are the ones that know exactly who they are. Our process is built to find that clarity and translate it into every asset, every frame, every touchpoint.
+          </p>
+          <p class="approach-body">
+            We work with a limited number of clients at a time — by design. Every brand we take on gets our full focus, not a junior team and a template.
+          </p>
+          <a href="#contact" class="btn btn-dark" style="margin-top: 36px;">Work With Us</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       CTA / CONTACT
+  ═══════════════════════════════════════ -->
+  <section class="cta-section" id="contact">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div class="cta-text">
+          <h2>Ready to build<br>something great?</h2>
+          <p>Tell us about your project and we'll get back to you within 24 hours. No templates. No formulas. Just real creative thinking.</p>
+        </div>
+        <div class="cta-actions">
+          <a href="mailto:contact.franciscoarruda@gmail.com" class="btn btn-dark">Send a Brief</a>
+          <a href="mailto:contact.franciscoarruda@gmail.com" class="btn btn-outline">Say Hello</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer>
+    <div class="footer-logo">VEOS</div>
+    <ul class="footer-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 VEOS. All rights reserved.</div>
+  </footer>
+
+
+  <script>
+    /* Nav */
+    const nav = document.getElementById('nav');
+
+    /* Parallax video — lerp with zoom-in */
+    const heroVideo = document.querySelector('.hero-video');
+    const heroEl    = document.querySelector('.hero');
+
+    let currentY = 0, targetY = 0;
+    let currentScale = 1, targetScale = 1;
+
+    (function animateParallax() {
+      currentY     += (targetY     - currentY)     * 0.12;
+      currentScale += (targetScale - currentScale) * 0.12;
+      heroVideo.style.transform =
+        `translateY(${currentY.toFixed(2)}px) scale(${currentScale.toFixed(4)})`;
+      requestAnimationFrame(animateParallax);
+    })();
+
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const heroH    = heroEl.offsetHeight;
+      const progress = Math.min(scrolled / heroH, 1);
+      if (scrolled <= heroH + 300) {
+        targetY     = scrolled * 1.9;
+        targetScale = 1 + progress * 0.22;
+      }
+      nav.classList.toggle('scrolled', scrolled > 60);
+    }, { passive: true });
+
+    /* Scroll reveal */
+    const revealEls = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>

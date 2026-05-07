@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Video/large media files
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local

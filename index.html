@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Porsche 992 GT3 RS — Kling Metallic</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    /* ─── Tokens ─── */
+    :root {
+      --bg:           #f5f5f3;
+      --white:        #ffffff;
+      --text-1:       #0f0f0f;
+      --text-2:       #464646;
+      --text-3:       #909090;
+      --accent:       #7b1e2d;
+      --accent-dim:   rgba(123,30,45,0.09);
+      --line:         rgba(0,0,0,0.07);
+      --sh-xs:        0 4px 18px  rgba(0,0,0,0.05);
+      --sh-sm:        0 10px 36px rgba(0,0,0,0.07);
+      --sh-md:        0 24px 64px rgba(0,0,0,0.09);
+      --sh-lg:        0 48px 96px rgba(0,0,0,0.12);
+      --sh-xl:        0 72px 120px rgba(0,0,0,0.16);
+      --ease:         cubic-bezier(0.22, 1, 0.36, 1);
+      --t-fast:       0.22s var(--ease);
+      --t:            0.55s var(--ease);
+      --t-slow:       0.85s var(--ease);
+      --radius:       18px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; }
+    a   { text-decoration: none; }
+
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 200;
+      padding: 26px 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: padding var(--t), background var(--t), box-shadow var(--t);
+    }
+
+    #nav.scrolled {
+      padding: 16px 52px;
+      background: rgba(245,245,243,0.82);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      box-shadow: 0 1px 0 var(--line), var(--sh-xs);
+    }
+
+    .nav-logo {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      transition: color var(--t);
+    }
+    #nav.scrolled .nav-logo { color: var(--text-1); }
+
+    .nav-links {
+      display: flex;
+      gap: 38px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      transition: color var(--t-fast);
+    }
+    #nav.scrolled .nav-links a { color: var(--text-2); }
+    .nav-links a:hover,
+    #nav.scrolled .nav-links a:hover { color: var(--accent); }
+
+    .nav-btn {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 9px 22px;
+      border-radius: 100px;
+      transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+    }
+    #nav.scrolled .nav-btn { color: var(--accent); border-color: var(--accent); }
+    .nav-btn:hover {
+      background: var(--white);
+      color: var(--text-1);
+      border-color: var(--white);
+      transform: translateY(-1px);
+      box-shadow: var(--sh-sm);
+    }
+    #nav.scrolled .nav-btn:hover {
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+    }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100dvh;
+      min-height: 680px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .hero video {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 68%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* horizontal blend: white bg on left bleeds into the video seamlessly */
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        var(--bg)                   22%,
+        rgba(245,245,243,0.88)      36%,
+        rgba(245,245,243,0.35)      50%,
+        transparent                 66%
+      );
+      z-index: 1;
+    }
+
+    /* blends hero into the white bg below */
+    .hero-base-fade {
+      position: absolute;
+      bottom: -2px;
+      left: 0; right: 0;
+      height: 220px;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      padding: 0 0 0 52px;
+      max-width: 480px;
+      margin-top: 60px; /* offset for fixed nav */
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 18px;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp 0.8s 0.4s var(--ease) forwards;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-title {
+      font-size: clamp(58px, 9vw, 116px);
+      font-weight: 900;
+      line-height: 0.93;
+      letter-spacing: -0.04em;
+      color: var(--white);
+      opacity: 0;
+      transform: translateY(28px);
+      animation: fadeUp 0.9s 0.6s var(--ease) forwards;
+    }
+    .hero-title em {
+      display: block;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 0.48em;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.38);
+      margin-top: 10px;
+    }
+
+    .hero-scroll-hint {
+      position: absolute;
+      right: 52px;
+      bottom: 52px;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: fadeIn 1s 1.4s ease forwards;
+    }
+    .hero-scroll-hint span {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      writing-mode: vertical-rl;
+    }
+    .scroll-bar {
+      width: 1px;
+      height: 56px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.45), transparent);
+      animation: scrollPulse 2.2s ease-in-out infinite;
+    }
+
+    /* ─────────────────────────────────────────
+       LAYOUT HELPERS
+    ───────────────────────────────────────── */
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 52px; }
+
+    .eyebrow {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    /* ─────────────────────────────────────────
+       STATEMENT
+    ───────────────────────────────────────── */
+    .statement {
+      padding: 116px 0 104px;
+      text-align: center;
+    }
+
+    .statement h2 {
+      font-size: clamp(36px, 5vw, 70px);
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      line-height: 1.06;
+      color: var(--text-1);
+      max-width: 860px;
+      margin: 0 auto 28px;
+    }
+
+    .statement p {
+      font-size: 17.5px;
+      line-height: 1.78;
+      color: var(--text-2);
+      max-width: 520px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+
+    /* ─────────────────────────────────────────
+       PERFORMANCE NUMBERS
+    ───────────────────────────────────────── */
+    .performance { padding: 0 0 112px; }
+
+    .perf-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--sh-md);
+      border: 1px solid var(--line);
+    }
+
+    .perf-card {
+      background: var(--white);
+      padding: 54px 36px 48px;
+      text-align: center;
+      border-right: 1px solid var(--line);
+      transition: background var(--t-fast);
+    }
+    .perf-card:last-child { border-right: none; }
+    .perf-card:hover { background: #fafaf8; }
+
+    .perf-value {
+      font-size: clamp(40px, 4.5vw, 62px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text-1);
+      margin-bottom: 6px;
+    }
+    .perf-value .num { display: inline; }
+    .perf-value .unit {
+      font-size: 0.38em;
+      font-weight: 600;
+      color: var(--text-3);
+      letter-spacing: 0;
+      vertical-align: super;
+      margin-left: 3px;
+    }
+    .perf-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-top: 10px;
+    }
+    .perf-sub {
+      font-size: 11.5px;
+      color: var(--text-3);
+      margin-top: 5px;
+      font-weight: 400;
+    }
+
+    /* ─────────────────────────────────────────
+       GALLERY
+    ───────────────────────────────────────── */
+    .gallery { padding: 0 0 112px; }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .section-header h2 {
+      font-size: clamp(30px, 3.8vw, 52px);
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      color: var(--text-1);
+      line-height: 1.08;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 20px;
+      height: 620px;
+    }
+
+    .gal-item {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: var(--sh-md);
+      transition: transform var(--t), box-shadow var(--t);
+      cursor: zoom-in;
+    }
+    .gal-item:hover { transform: translateY(-5px); box-shadow: var(--sh-xl); }
+
+    .gal-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--t-slow);
+    }
+    .gal-item:hover img { transform: scale(1.04); }
+
+    .gal-item--main { grid-row: 1 / 3; }
+
+    /* ─────────────────────────────────────────
+       ENGINEERING (WHEEL DETAIL)
+    ───────────────────────────────────────── */
+    .engineering { padding: 40px 0 112px; }
+
+    .eng-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 88px;
+      align-items: center;
+    }
+
+    .eng-photo {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--sh-lg);
+      position: relative;
+    }
+    .eng-photo img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      transition: transform var(--t-slow);
+      display: block;
+    }
+    .eng-photo:hover img { transform: scale(1.05); }
+
+    .eng-text { padding: 8px 0; }
+
+    .big-num {
+      font-size: 108px;
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      line-height: 0.82;
+      color: var(--line);
+      margin-bottom: 30px;
+      user-select: none;
+    }
+
+    .eng-text h2 {
+      font-size: clamp(28px, 2.8vw, 42px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text-1);
+      margin-bottom: 18px;
+    }
+
+    .eng-text p {
+      font-size: 15.5px;
+      line-height: 1.82;
+      color: var(--text-2);
+      margin-bottom: 14px;
+    }
+
+    .eng-chips {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 38px;
+    }
+
+    .chip {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 20px 22px;
+      box-shadow: var(--sh-xs);
+      border: 1px solid var(--line);
+      transition: box-shadow var(--t-fast), transform var(--t-fast);
+    }
+    .chip:hover { transform: translateY(-2px); box-shadow: var(--sh-sm); }
+
+    .chip-val {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-1);
+      margin-bottom: 4px;
+    }
+    .chip-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    /* ─────────────────────────────────────────
+       PROFILE FEATURE (side-shot strip)
+    ───────────────────────────────────────── */
+    .profile { padding: 0 0 112px; }
+
+    .profile-inner {
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--sh-lg);
+      background: var(--white);
+    }
+
+    .profile-img {
+      width: 100%;
+      aspect-ratio: 21 / 9;
+      object-fit: cover;
+      object-position: center 40%;
+      display: block;
+      transition: transform var(--t-slow);
+    }
+    .profile-inner:hover .profile-img { transform: scale(1.025); }
+
+    .profile-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 80px 52px 44px;
+      background: linear-gradient(to top, rgba(8,8,8,0.72), transparent);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .profile-caption h3 {
+      font-size: clamp(22px, 2.5vw, 34px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--white);
+      line-height: 1.15;
+    }
+    .profile-caption p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+      max-width: 260px;
+      line-height: 1.6;
+      text-align: right;
+    }
+
+    /* ─────────────────────────────────────────
+       TECH SPECS TABLE
+    ───────────────────────────────────────── */
+    .specs { padding: 0 0 112px; }
+
+    .specs-table {
+      background: var(--white);
+      border-radius: 22px;
+      box-shadow: var(--sh-md);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .spec-row {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      border-bottom: 1px solid var(--line);
+      transition: background var(--t-fast);
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-row:hover { background: #fafaf8; }
+
+    .spec-k, .spec-v {
+      padding: 20px 36px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .spec-k {
+      color: var(--text-3);
+      font-weight: 500;
+      border-right: 1px solid var(--line);
+    }
+    .spec-v { color: var(--text-1); font-weight: 600; }
+
+    /* ─────────────────────────────────────────
+       CTA
+    ───────────────────────────────────────── */
+    .cta-section { padding: 0 0 120px; }
+
+    .cta-card {
+      background: var(--white);
+      border-radius: 26px;
+      padding: 88px 52px;
+      box-shadow: var(--sh-lg);
+      text-align: center;
+      border: 1px solid var(--line);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .cta-card h2 {
+      font-size: clamp(34px, 4vw, 54px);
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      color: var(--text-1);
+      line-height: 1.08;
+      margin-bottom: 18px;
+    }
+
+    .cta-card p {
+      font-size: 16.5px;
+      line-height: 1.74;
+      color: var(--text-2);
+      max-width: 440px;
+      margin: 0 auto 44px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 34px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: transform var(--t-fast), box-shadow var(--t-fast), background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-dark {
+      background: var(--text-1);
+      color: var(--white);
+    }
+    .btn-dark:hover { background: var(--accent); box-shadow: 0 14px 34px rgba(123,30,45,0.28); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-1);
+      border: 1.5px solid rgba(0,0,0,0.14);
+    }
+    .btn-outline:hover { border-color: var(--text-1); box-shadow: var(--sh-sm); }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      padding: 36px 52px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .footer-note {
+      font-size: 11.5px;
+      color: var(--text-3);
+      font-weight: 400;
+    }
+
+    /* ─────────────────────────────────────────
+       SCROLL REVEAL
+    ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition:
+        opacity  0.75s var(--ease),
+        transform 0.75s var(--ease);
+    }
+    .reveal.up   { transform: translateY(36px); }
+    .reveal.left { transform: translateX(-36px); }
+    .reveal.right{ transform: translateX(36px); }
+    .reveal.visible { opacity: 1; transform: translate(0); }
+
+    .delay-1 { transition-delay: 0.10s; }
+    .delay-2 { transition-delay: 0.20s; }
+    .delay-3 { transition-delay: 0.30s; }
+    .delay-4 { transition-delay: 0.40s; }
+
+    /* ─────────────────────────────────────────
+       KEYFRAMES
+    ───────────────────────────────────────── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(0.65); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       NAV
+  ═══════════════════════════════════════ -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">992 GT3 RS</a>
+    <ul class="nav-links">
+      <li><a href="#performance">Performance</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#specs">Specifications</a></li>
+    </ul>
+    <a href="#inquire" class="nav-btn">Inquire</a>
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+  <section class="hero">
+    <video autoplay muted loop playsinline>
+      <source src="Porsche%20992%20Kling%20.mp4" type="video/mp4">
+    </video>
+    <div class="hero-vignette"></div>
+    <div class="hero-base-fade"></div>
+
+    <div class="hero-content">
+      <div class="hero-tag">Porsche 992 &nbsp;·&nbsp; Special Configuration</div>
+      <h1 class="hero-title">
+        GT3 RS
+        <em>Kling Metallic</em>
+      </h1>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <div class="scroll-bar"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       STATEMENT
+  ═══════════════════════════════════════ -->
+  <section class="statement">
+    <div class="wrap">
+      <p class="eyebrow reveal">Pure Racing DNA</p>
+      <h2 class="reveal delay-1">The most extreme 911 ever conceived for the road.</h2>
+      <p class="reveal delay-2">
+        Built without compromise. Finished in the rare Kling Metallic — a deep crimson that exists nowhere else on the 992 production palette. This is the car that renders everything else unnecessary.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       PERFORMANCE NUMBERS
+  ═══════════════════════════════════════ -->
+  <section class="performance" id="performance">
+    <div class="wrap">
+      <div class="perf-grid reveal">
+        <div class="perf-card">
+          <div class="perf-value">
+            <span class="num" data-count="518">0</span><span class="unit">hp</span>
+          </div>
+          <div class="perf-label">Power Output</div>
+          <div class="perf-sub">@ 8,500 rpm</div>
+        </div>
+        <div class="perf-card">
+          <div class="perf-value">
+            <span class="num" data-count-dec="3.2">0</span><span class="unit">s</span>
+          </div>
+          <div class="perf-label">0 – 60 mph</div>
+          <div class="perf-sub">With launch control</div>
+        </div>
+        <div class="perf-card">
+          <div class="perf-value">
+            <span class="num" data-count="184">0</span><span class="unit">mph</span>
+          </div>
+          <div class="perf-label">Top Speed</div>
+          <div class="perf-sub">Electronically limited</div>
+        </div>
+        <div class="perf-card">
+          <div class="perf-value">
+            <span class="num" data-count="860">0</span><span class="unit">lbs</span>
+          </div>
+          <div class="perf-label">Downforce</div>
+          <div class="perf-sub">At maximum velocity</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       GALLERY
+  ═══════════════════════════════════════ -->
+  <section class="gallery" id="gallery">
+    <div class="wrap">
+      <div class="section-header">
+        <p class="eyebrow reveal">Studio Series</p>
+        <h2 class="reveal delay-1">Every angle, a statement.</h2>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gal-item gal-item--main reveal left">
+          <img src="112bba88bd43b87adf121de8ebcbd08f1792433.jpeg"
+               alt="Porsche 992 GT3 RS Kling — Front Three-Quarter">
+        </div>
+        <div class="gal-item reveal right">
+          <img src="e4442c68efe2c65c75959abdb429d8df1420630.jpeg"
+               alt="Porsche 992 GT3 RS Kling — Aerial View">
+        </div>
+        <div class="gal-item reveal right delay-2">
+          <img src="6bd140a98f13a1a8f90d91982919c5c81600944.jpeg"
+               alt="Porsche Centre-Lock Wheels — Yellow Calipers">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       PROFILE STRIP
+  ═══════════════════════════════════════ -->
+  <section class="profile">
+    <div class="wrap">
+      <div class="profile-inner reveal">
+        <img class="profile-img"
+             src="295136095c80f9bf04aeb78cee9c4d3e1684470.jpeg"
+             alt="Porsche 992 GT3 RS Kling — Side Profile">
+        <div class="profile-caption">
+          <h3>Silhouette<br>shaped by air.</h3>
+          <p>Every surface serves a purpose. The GT3 RS generates more downforce than any 911 before it — without a single compromise to road legality.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       ENGINEERING DETAIL
+  ═══════════════════════════════════════ -->
+  <section class="engineering">
+    <div class="wrap">
+      <div class="eng-grid">
+
+        <div class="eng-photo reveal left">
+          <img src="6bd140a98f13a1a8f90d91982919c5c81600944.jpeg"
+               alt="Porsche PCCB Ceramic Brakes — Yellow Calipers">
+        </div>
+
+        <div class="eng-text">
+          <div class="big-num reveal">01</div>
+          <p class="eyebrow reveal">Track-Grade Hardware</p>
+          <h2 class="reveal delay-1">Centre-lock wheels.<br>Race-bred stopping power.</h2>
+          <p class="reveal delay-2">
+            Forged magnesium centre-lock wheels reduce unsprung mass to a minimum, allowing the suspension to react with pure, unfiltered precision over every surface irregularity.
+          </p>
+          <p class="reveal delay-2">
+            PCCB ceramic composite discs measure 410 mm at the front. Yellow-anodised Porsche calipers grip with a force that makes deceleration feel like a physical event. Michelin Pilot Sport Cup 2 (R) tyres complete the system.
+          </p>
+
+          <div class="eng-chips">
+            <div class="chip reveal delay-2">
+              <div class="chip-val">PCCB</div>
+              <div class="chip-label">Ceramic Brakes</div>
+            </div>
+            <div class="chip reveal delay-3">
+              <div class="chip-val">Cup 2 R</div>
+              <div class="chip-label">Michelin Tyres</div>
+            </div>
+            <div class="chip reveal delay-2">
+              <div class="chip-val">Mg</div>
+              <div class="chip-label">Magnesium Wheels</div>
+            </div>
+            <div class="chip reveal delay-3">
+              <div class="chip-val">410 mm</div>
+              <div class="chip-label">Front Disc Diameter</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       TECH SPECS TABLE
+  ═══════════════════════════════════════ -->
+  <section class="specs" id="specs">
+    <div class="wrap">
+      <div class="section-header">
+        <p class="eyebrow reveal">Full Specification</p>
+        <h2 class="reveal delay-1">Technical Details</h2>
+      </div>
+
+      <div class="specs-table reveal">
+        <div class="spec-row"><div class="spec-k">Model</div><div class="spec-v">Porsche 911 GT3 RS (992)</div></div>
+        <div class="spec-row"><div class="spec-k">Exterior Colour</div><div class="spec-v">Kling Metallic (Special Order)</div></div>
+        <div class="spec-row"><div class="spec-k">Engine</div><div class="spec-v">4.0L Naturally Aspirated Flat-Six</div></div>
+        <div class="spec-row"><div class="spec-k">Power Output</div><div class="spec-v">518 hp @ 8,500 rpm</div></div>
+        <div class="spec-row"><div class="spec-k">Torque</div><div class="spec-v">343 lb-ft @ 6,300 rpm</div></div>
+        <div class="spec-row"><div class="spec-k">Redline</div><div class="spec-v">9,000 rpm</div></div>
+        <div class="spec-row"><div class="spec-k">Transmission</div><div class="spec-v">7-Speed PDK (Doppelkupplungsgetriebe)</div></div>
+        <div class="spec-row"><div class="spec-k">0 – 60 mph</div><div class="spec-v">3.2 seconds</div></div>
+        <div class="spec-row"><div class="spec-k">0 – 124 mph</div><div class="spec-v">10.9 seconds</div></div>
+        <div class="spec-row"><div class="spec-k">Top Speed</div><div class="spec-v">184 mph (296 km/h)</div></div>
+        <div class="spec-row"><div class="spec-k">Aerodynamic Downforce</div><div class="spec-v">860 lbs at maximum speed</div></div>
+        <div class="spec-row"><div class="spec-k">Kerb Weight</div><div class="spec-v">1,450 kg (3,196 lbs)</div></div>
+        <div class="spec-row"><div class="spec-k">Brakes</div><div class="spec-v">PCCB Ceramic Composite, 410 mm front</div></div>
+        <div class="spec-row"><div class="spec-k">Wheels</div><div class="spec-v">Forged Magnesium, Centre-Lock</div></div>
+        <div class="spec-row"><div class="spec-k">Tyres</div><div class="spec-v">Michelin Pilot Sport Cup 2 R</div></div>
+        <div class="spec-row"><div class="spec-k">Suspension</div><div class="spec-v">DSSV Dampers, Active Front-Axle Lift</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       CTA
+  ═══════════════════════════════════════ -->
+  <section class="cta-section" id="inquire">
+    <div class="wrap">
+      <div class="cta-card reveal">
+        <h2>Express your interest.</h2>
+        <p>
+          This Kling GT3 RS is a single, unrepeatable configuration. Contact us to discuss provenance, availability, and private viewing appointments.
+        </p>
+        <div class="btn-group">
+          <a href="mailto:contact@example.com" class="btn btn-dark">Request Information</a>
+          <a href="tel:+10000000000"            class="btn btn-outline">Call Directly</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer>
+    <div class="footer-logo">992 GT3 RS · Kling Metallic</div>
+    <div class="footer-note">Photography in controlled studio environment. Specifications per Porsche AG.</div>
+  </footer>
+
+
+  <!-- ═══════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════ -->
+  <script>
+    /* ── Nav scroll ── */
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 56);
+    }, { passive: true });
+
+    /* ── Scroll reveal ── */
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.10, rootMargin: '0px 0px -50px 0px' });
+    revealEls.forEach(el => revealObs.observe(el));
+
+    /* ── Number counter ── */
+    function animateNum(el, target, decimal, duration) {
+      let startTime = null;
+      const step = (ts) => {
+        if (!startTime) startTime = ts;
+        const pct  = Math.min((ts - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - pct, 3);          // ease-out cubic
+        const val  = ease * target;
+        el.textContent = decimal ? val.toFixed(1) : Math.floor(val);
+        if (pct < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    const numObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el  = e.target;
+        const int = el.dataset.count;
+        const dec = el.dataset.countDec;
+        if (int) animateNum(el, parseInt(int, 10),   false, 1600);
+        if (dec) animateNum(el, parseFloat(dec),      true,  1400);
+        numObs.unobserve(el);
+      });
+    }, { threshold: 0.6 });
+
+    document.querySelectorAll('[data-count],[data-count-dec]')
+      .forEach(el => numObs.observe(el));
+  </script>
+
+</body>
+</html>
