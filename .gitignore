@@ -1,11 +1,11 @@
 # Dependencies
 node_modules/
 
-# Video/large media files
-*.mp4
+# Video/large media files (screen recordings only — hero videos must be committed)
 *.mov
 *.avi
 *.mkv
+Bildschirmaufnahme*
 
 # OS files
 .DS_Store
