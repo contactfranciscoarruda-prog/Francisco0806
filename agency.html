@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VEOS — Creative Agency</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; font-size: 16px; }
+    html { font-size: 16px; }
 
     :root {
       --bg:       #f8f8f6;
@@ -28,7 +25,8 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 500;
       background: var(--bg);
       color: var(--text-1);
       -webkit-font-smoothing: antialiased;
@@ -542,27 +540,48 @@
       color: var(--text-3);
     }
 
+    /* ── SCROLL PROGRESS ── */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--text-1);
+      z-index: 9999;
+      pointer-events: none;
+      transform-origin: left;
+      transition: opacity 0.4s;
+    }
+
     /* ── SCROLL REVEAL ── */
     .reveal {
       opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.72s var(--ease), transform 0.72s var(--ease);
+      transform: translateY(36px);
+      transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
     }
-    .reveal.left  { transform: translateX(-28px); }
-    .reveal.right { transform: translateX(28px); }
+    .reveal.left  { transform: translateX(-36px); }
+    .reveal.right { transform: translateX(36px); }
     .reveal.visible { opacity: 1; transform: translate(0); }
 
-    .delay-1 { transition-delay: 0.08s; }
-    .delay-2 { transition-delay: 0.16s; }
-    .delay-3 { transition-delay: 0.24s; }
-    .delay-4 { transition-delay: 0.32s; }
+    .delay-1 { transition-delay: 0.10s; }
+    .delay-2 { transition-delay: 0.20s; }
+    .delay-3 { transition-delay: 0.30s; }
+    .delay-4 { transition-delay: 0.40s; }
 
     @keyframes fadeUp {
       to { opacity: 1; transform: translateY(0); }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal.left, .reveal.right { transition: none; opacity: 1; transform: none; }
+      .hero-eyebrow, .hero-title, .hero-bottom { animation: none; opacity: 1; }
+      #scroll-progress { display: none; }
+    }
   </style>
 </head>
 <body>
+
+  <div id="scroll-progress"></div>
 
   <!-- ═══════════════════════════════════════
        NAV
@@ -570,9 +589,9 @@
   <nav id="nav">
     <a href="#" class="nav-logo">VEOS</a>
     <ul class="nav-links">
-      <li><a href="#services">Services</a></li>
-      <li><a href="#approach">Approach</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#services">Let's Start</a></li>
+      <li><a href="#approach">Why Us</a></li>
+      <li><a href="#contact">Portfolio</a></li>
     </ul>
     <a href="#contact" class="nav-btn">Start a Project</a>
   </nav>
@@ -587,11 +606,11 @@
     </video>
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <div class="hero-eyebrow">Brand direction &nbsp;·&nbsp; Convertable content &nbsp;·&nbsp; Content production</div>
-      <h1 class="hero-title">We help brands<br><em>to</em> attract.</h1>
+      <div class="hero-eyebrow">Strategic Content &nbsp;·&nbsp; Brand Identity &nbsp;·&nbsp; Creator Network</div>
+      <h1 class="hero-title">We build brands<br><em>that</em> lead.</h1>
       <div class="hero-bottom">
         <p class="hero-desc">
-          VEOS connects brands to consumers through identity, motion, and strategic creative direction built to perform.
+          VEOS is a creative network helping luxury lifestyle brands craft strategic content, build lasting identity, and connect with the right creators to drive real growth.
         </p>
         <div class="hero-cta">
           <a href="#contact" class="btn btn-dark">Start a Project</a>
@@ -607,22 +626,22 @@
   ═══════════════════════════════════════ -->
   <div class="marquee-section" aria-hidden="true">
     <div class="marquee-track">
+      <span class="marquee-item">Strategic Content</span>
+      <span class="marquee-item">Luxury Lifestyle</span>
       <span class="marquee-item">Brand Identity</span>
+      <span class="marquee-item">Creator Network</span>
+      <span class="marquee-item">Influencer Marketing</span>
+      <span class="marquee-item">Content Strategy</span>
+      <span class="marquee-item">Brand Growth</span>
       <span class="marquee-item">Visual Direction</span>
-      <span class="marquee-item">Motion Design</span>
-      <span class="marquee-item">Brand Strategy</span>
-      <span class="marquee-item">Film & Video</span>
-      <span class="marquee-item">Creative Direction</span>
-      <span class="marquee-item">Positioning</span>
-      <span class="marquee-item">Art Direction</span>
+      <span class="marquee-item">Strategic Content</span>
+      <span class="marquee-item">Luxury Lifestyle</span>
       <span class="marquee-item">Brand Identity</span>
+      <span class="marquee-item">Creator Network</span>
+      <span class="marquee-item">Influencer Marketing</span>
+      <span class="marquee-item">Content Strategy</span>
+      <span class="marquee-item">Brand Growth</span>
       <span class="marquee-item">Visual Direction</span>
-      <span class="marquee-item">Motion Design</span>
-      <span class="marquee-item">Brand Strategy</span>
-      <span class="marquee-item">Film & Video</span>
-      <span class="marquee-item">Creative Direction</span>
-      <span class="marquee-item">Positioning</span>
-      <span class="marquee-item">Art Direction</span>
     </div>
   </div>
 
@@ -636,51 +655,51 @@
       <div class="services-header">
         <div class="reveal">
           <p class="section-eyebrow">What We Do</p>
-          <h2 class="section-title">Full-spectrum<br>creative.</h2>
+          <h2 class="section-title">Three pillars.<br>One network.</h2>
         </div>
-        <p class="services-intro reveal right">From brand foundations to motion campaigns — every discipline your brand needs to break through.</p>
+        <p class="services-intro reveal right">From strategic content to creator connections — everything a luxury brand needs to grow with intention.</p>
       </div>
 
       <div>
         <div class="service-item reveal">
           <div class="service-num">01</div>
           <div>
-            <div class="service-name">Branding & Identity</div>
-            <p class="service-desc">We build brand systems from the ground up — naming, logo, typography, colour, and the full identity toolkit that makes your brand unmistakable and enduring.</p>
+            <div class="service-name">Strategic Content</div>
+            <p class="service-desc">We develop content strategies rooted in the luxury lifestyle space. Every piece is crafted to speak to your audience, elevate your brand perception, and convert attention into loyalty.</p>
           </div>
           <div class="service-tags">
-            <span class="tag">Logo Design</span>
-            <span class="tag">Brand Guidelines</span>
-            <span class="tag">Visual Identity</span>
-            <span class="tag">Typography</span>
+            <span class="tag">Content Strategy</span>
+            <span class="tag">Luxury Lifestyle</span>
+            <span class="tag">Visual Storytelling</span>
+            <span class="tag">Campaign Creation</span>
           </div>
         </div>
 
         <div class="service-item reveal delay-1">
           <div class="service-num">02</div>
           <div>
-            <div class="service-name">Video & Motion</div>
-            <p class="service-desc">Brand films, commercials, and motion graphics that communicate who you are in seconds. We direct, shoot, and deliver work that moves people — literally.</p>
+            <div class="service-name">Brand Identity</div>
+            <p class="service-desc">We build and grow brand identities that feel native to the luxury world. From visual language to tone of voice — we define what your brand stands for and how it shows up everywhere.</p>
           </div>
           <div class="service-tags">
-            <span class="tag">Brand Films</span>
-            <span class="tag">Motion Graphics</span>
-            <span class="tag">Commercials</span>
-            <span class="tag">Direction</span>
+            <span class="tag">Brand System</span>
+            <span class="tag">Visual Identity</span>
+            <span class="tag">Positioning</span>
+            <span class="tag">Brand Guidelines</span>
           </div>
         </div>
 
         <div class="service-item reveal delay-2">
           <div class="service-num">03</div>
           <div>
-            <div class="service-name">Creative Direction & Strategy</div>
-            <p class="service-desc">Strategic positioning and creative direction that aligns every touchpoint. We help brands find their voice, define their territory, and own it with conviction.</p>
+            <div class="service-name">Creator & Influencer Network</div>
+            <p class="service-desc">We connect you to the right creators and influencers in the luxury lifestyle space. Not just reach — the right reach. People who genuinely move product and build brand equity.</p>
           </div>
           <div class="service-tags">
-            <span class="tag">Positioning</span>
-            <span class="tag">Brand Strategy</span>
-            <span class="tag">Art Direction</span>
-            <span class="tag">Consulting</span>
+            <span class="tag">Influencer Matching</span>
+            <span class="tag">Creator Partnerships</span>
+            <span class="tag">Campaign Management</span>
+            <span class="tag">Audience Reach</span>
           </div>
         </div>
       </div>
@@ -697,11 +716,11 @@
       <div class="numbers-grid">
         <div class="num-card reveal">
           <div class="num-value">50+</div>
-          <div class="num-label">Brands Built</div>
+          <div class="num-label">Luxury Brands Grown</div>
         </div>
         <div class="num-card reveal delay-1">
-          <div class="num-value">8+</div>
-          <div class="num-label">Years of Practice</div>
+          <div class="num-value">200+</div>
+          <div class="num-label">Creator Partners</div>
         </div>
         <div class="num-card reveal delay-2">
           <div class="num-value">100%</div>
@@ -728,28 +747,28 @@
               <div class="step-num">01</div>
               <div>
                 <div class="step-name">Discover</div>
-                <p class="step-desc">Deep dives into your market, audience, and ambitions give us the foundation everything else builds on. We listen before we talk.</p>
+                <p class="step-desc">We dig deep into your brand, your market, and your audience in the luxury space. Understanding who you're speaking to is the foundation of everything.</p>
               </div>
             </div>
             <div class="step reveal delay-1">
               <div class="step-num">02</div>
               <div>
-                <div class="step-name">Define</div>
-                <p class="step-desc">We establish your strategic territory — the positioning, the voice, the story — before a single pixel is designed.</p>
+                <div class="step-name">Strategise</div>
+                <p class="step-desc">We map out your content strategy, identity gaps, and creator alignment. A clear, luxury-native plan before any production begins.</p>
               </div>
             </div>
             <div class="step reveal delay-2">
               <div class="step-num">03</div>
               <div>
-                <div class="step-name">Design & Direct</div>
-                <p class="step-desc">We craft the work: identity systems, motion, and campaign material built to perform across every channel.</p>
+                <div class="step-name">Create & Connect</div>
+                <p class="step-desc">We produce the content, build the identity assets, and activate the right creators to amplify your brand in the spaces that matter.</p>
               </div>
             </div>
             <div class="step reveal delay-3">
               <div class="step-num">04</div>
               <div>
-                <div class="step-name">Deliver</div>
-                <p class="step-desc">Full brand handoff with comprehensive guidelines, assets, and ongoing partnership to ensure the work lands and lasts.</p>
+                <div class="step-name">Grow</div>
+                <p class="step-desc">We monitor, optimise, and scale. The network keeps working for your brand long after launch — compounding reach and brand equity over time.</p>
               </div>
             </div>
           </div>
@@ -757,13 +776,13 @@
 
         <div class="reveal right" style="padding-top: 8px;">
           <p class="approach-statement">
-            Great brands aren't found —<br><em>they're built with intention.</em>
+            Luxury brands don't happen by accident —<br><em>they're built with precision.</em>
           </p>
           <p class="approach-body">
-            At VEOS, we believe the most powerful brands are the ones that know exactly who they are. Our process is built to find that clarity and translate it into every asset, every frame, every touchpoint.
+            At VEOS, we understand the luxury consumer. Our network is built specifically for brands that want to position themselves at the top of the lifestyle space — and stay there. We don't do generic. We do elevated, intentional, and effective.
           </p>
           <p class="approach-body">
-            We work with a limited number of clients at a time — by design. Every brand we take on gets our full focus, not a junior team and a template.
+            We work with a select number of brands at a time — by design. Every client gets the full weight of our network, our strategy, and our creative thinking. No templates. No shortcuts.
           </p>
           <a href="#contact" class="btn btn-dark" style="margin-top: 36px;">Work With Us</a>
         </div>
@@ -780,8 +799,8 @@
     <div class="wrap">
       <div class="cta-inner reveal">
         <div class="cta-text">
-          <h2>Ready to build<br>something great?</h2>
-          <p>Tell us about your project and we'll get back to you within 24 hours. No templates. No formulas. Just real creative thinking.</p>
+          <h2>Ready to elevate<br>your brand?</h2>
+          <p>Tell us about your brand and we'll show you exactly how VEOS can help you grow in the luxury lifestyle space. We respond within 24 hours.</p>
         </div>
         <div class="cta-actions">
           <a href="mailto:contact.franciscoarruda@gmail.com" class="btn btn-dark">Send a Brief</a>
@@ -798,46 +817,69 @@
   <footer>
     <div class="footer-logo">VEOS</div>
     <ul class="footer-links">
-      <li><a href="#services">Services</a></li>
-      <li><a href="#approach">Approach</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#services">Let's Start</a></li>
+      <li><a href="#approach">Why Us</a></li>
+      <li><a href="#contact">Portfolio</a></li>
     </ul>
     <div class="footer-copy">© 2026 VEOS. All rights reserved.</div>
   </footer>
 
 
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script>
-    /* Nav */
-    const nav = document.getElementById('nav');
+    const nav         = document.getElementById('nav');
+    const heroVideo   = document.querySelector('.hero-video');
+    const heroEl      = document.querySelector('.hero');
+    const progressBar = document.getElementById('scroll-progress');
 
-    /* Parallax video — lerp with zoom-in */
-    const heroVideo = document.querySelector('.hero-video');
-    const heroEl    = document.querySelector('.hero');
+    /* ── Lenis smooth scroll ── */
+    const lenis = new Lenis({
+      duration:    1.6,
+      easing:      t => 1 - Math.pow(1 - t, 4),
+      smooth:      true,
+      smoothTouch: false,
+    });
 
+    /* Anchor links routed through Lenis */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (!href || href === '#') return;
+        e.preventDefault();
+        lenis.scrollTo(href, { offset: -80, duration: 2.2 });
+      });
+    });
+
+    /* ── Parallax + nav + progress bar (driven by Lenis) ── */
     let currentY = 0, targetY = 0;
     let currentScale = 1, targetScale = 1;
 
-    (function animateParallax() {
-      currentY     += (targetY     - currentY)     * 0.12;
-      currentScale += (targetScale - currentScale) * 0.12;
-      heroVideo.style.transform =
-        `translateY(${currentY.toFixed(2)}px) scale(${currentScale.toFixed(4)})`;
-      requestAnimationFrame(animateParallax);
-    })();
-
-    window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY;
+    lenis.on('scroll', ({ scroll, limit }) => {
       const heroH    = heroEl.offsetHeight;
-      const progress = Math.min(scrolled / heroH, 1);
-      if (scrolled <= heroH + 300) {
-        targetY     = scrolled * 1.9;
+      const progress = Math.min(scroll / heroH, 1);
+
+      if (scroll <= heroH + 300) {
+        targetY     = scroll * 1.9;
         targetScale = 1 + progress * 0.22;
       }
-      nav.classList.toggle('scrolled', scrolled > 60);
-    }, { passive: true });
 
-    /* Scroll reveal */
-    const revealEls = document.querySelectorAll('.reveal');
+      nav.classList.toggle('scrolled', scroll > 60);
+      progressBar.style.width = (scroll / limit * 100).toFixed(2) + '%';
+    });
+
+    /* ── rAF loop: Lenis tick + parallax lerp ── */
+    (function loop(time) {
+      lenis.raf(time);
+
+      currentY     += (targetY     - currentY)     * 0.10;
+      currentScale += (targetScale - currentScale) * 0.10;
+      heroVideo.style.transform =
+        `translateY(${currentY.toFixed(2)}px) scale(${currentScale.toFixed(4)})`;
+
+      requestAnimationFrame(loop);
+    })(0);
+
+    /* ── Scroll reveal ── */
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -845,8 +887,8 @@
           obs.unobserve(e.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    revealEls.forEach(el => obs.observe(el));
+    }, { threshold: 0.10, rootMargin: '0px 0px -48px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   </script>
 
 </body>
