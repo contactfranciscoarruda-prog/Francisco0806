@@ -1,0 +1,161 @@
+
+<div style="position:relative;width:100%;min-height:520px;background:linear-gradient(180deg,#fff 0%,#F1EFEC 100%);border-radius:10px;display:flex;align-items:center;justify-content:center">
+<canvas id="gc" width="480" height="480"></canvas>
+<div style="position:absolute;bottom:38px;left:50%;transform:translateX(-50%);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:500;font-size:13px;letter-spacing:6px;color:#BBBBBB;white-space:nowrap">Connecting people worldwide</div>
+<div style="position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-weight:500;font-size:9px;letter-spacing:2px;color:#DDDDDD;white-space:nowrap">— Nano Banana —</div>
+</div>
+<script>
+(function(){
+const cv=document.getElementById('gc'),ctx=cv.getContext('2d');
+const W=480,H=480,OX=W/2,OY=H/2,R=170;
+let rot=0;
+
+function ll2xyz(lat,lon,r){
+  const p=(90-lat)*Math.PI/180,t=(lon+180)*Math.PI/180;
+  return[-r*Math.sin(p)*Math.cos(t),r*Math.cos(p),r*Math.sin(p)*Math.sin(t)];
+}
+function ry(x,y,z,a){return[x*Math.cos(a)+z*Math.sin(a),y,-x*Math.sin(a)+z*Math.cos(a)];}
+function proj(x,y,z){const f=520,s=f/(f+z);return[OX+x*s,OY-y*s,z];}
+
+const continents=[
+  // North America - more detail
+  [[70,-140],[68,-136],[65,-168],[62,-165],[60,-145],[58,-137],[55,-130],[52,-128],[50,-125],[47,-124],[45,-124],[42,-124],[40,-124],[37,-122],[35,-120],[32,-117],[28,-110],[25,-110],[22,-106],[20,-105],[18,-96],[15,-90],[12,-84],[10,-84],[9,-79]],
+  // North America east coast back
+  [[9,-77],[10,-75],[12,-82],[15,-85],[18,-92],[22,-97],[25,-97],[28,-97],[30,-90],[30,-85],[30,-81],[32,-80],[35,-76],[37,-76],[40,-74],[42,-70],[44,-67],[45,-66],[47,-65],[50,-56],[52,-55],[55,-60],[58,-62],[60,-64],[62,-65],[65,-60],[68,-55],[70,-70],[72,-80],[73,-90],[72,-100],[70,-110],[70,-120],[70,-130],[70,-140]],
+  // Greenland
+  [[60,-44],[64,-42],[68,-24],[72,-22],[76,-18],[80,-18],[82,-30],[82,-40],[80,-52],[76,-58],[72,-56],[68,-52],[64,-50],[60,-44]],
+  // South America - more detail
+  [[9,-79],[8,-77],[5,-77],[3,-52],[1,-50],[0,-50],[-2,-44],[-5,-35],[-8,-35],[-10,-37],[-12,-38],[-15,-39],[-18,-39],[-20,-40],[-22,-43],[-25,-48],[-28,-49],[-30,-52],[-33,-52],[-35,-58],[-38,-62],[-40,-62],[-45,-66],[-50,-70],[-54,-68],[-55,-66],[-54,-65],[-52,-68],[-48,-75],[-45,-75],[-42,-74],[-38,-73],[-35,-72],[-30,-72],[-25,-70],[-18,-70],[-12,-77],[-5,-80],[0,-78],[5,-77],[8,-77],[9,-79]],
+  // Europe - more detail
+  [[36,10],[36,14],[37,15],[38,16],[40,18],[40,20],[42,19],[42,14],[44,12],[45,13],[46,13],[47,10],[48,8],[48,17],[49,17],[50,14],[51,14],[52,14],[52,20],[54,10],[54,18],[55,22],[56,8],[56,24],[58,5],[58,26],[60,5],[60,25],[61,5],[62,6],[63,7],[64,26],[65,14],[65,28],[66,14],[66,29],[68,16],[68,28],[69,18],[70,20],[70,23],[70,28],[68,28],[65,28]],
+  // Scandinavia
+  [[56,8],[57,8],[58,5],[60,5],[62,6],[63,8],[64,14],[65,14],[66,14],[68,18],[70,22],[70,28],[68,28],[66,29],[65,28],[64,26],[62,26],[60,25],[58,26],[56,24],[55,22],[54,18],[54,10],[56,8]],
+  // Africa - more detail
+  [[36,10],[34,12],[32,32],[30,32],[28,33],[25,32],[22,37],[18,38],[15,42],[12,44],[10,42],[8,40],[5,42],[3,40],[0,42],[-2,40],[-5,40],[-8,39],[-10,38],[-12,37],[-15,36],[-18,36],[-20,35],[-24,35],[-28,32],[-30,30],[-32,28],[-34,26],[-35,20],[-34,18],[-30,16],[-25,14],[-20,12],[-15,12],[-10,14],[-5,10],[0,9],[4,7],[5,2],[6,2],[8,3],[10,14],[12,14],[15,17],[18,16],[20,18],[22,24],[25,31],[28,32],[30,32],[34,36],[36,10]],
+  // Asia - more detail
+  [[70,30],[68,28],[65,28],[60,25],[56,24],[55,42],[54,18],[52,20],[50,14],[48,37],[45,33],[43,40],[42,45],[40,28],[40,50],[38,27],[36,36],[35,37],[33,36],[30,48],[28,50],[25,57],[23,55],[20,57],[18,58],[15,52],[12,44],[10,42],[8,46],[10,52],[12,55],[15,42],[18,40],[20,39],[22,38],[25,48],[28,50],[30,48],[32,50],[35,38],[38,44],[40,52],[42,50],[44,45],[46,48],[50,52],[52,58],[54,60],[56,62],[58,60],[60,60],[62,60],[64,60],[65,60],[65,68],[65,72],[60,80],[56,82],[55,82],[55,85],[52,84],[50,90],[50,100],[52,104],[54,100],[55,110],[56,112],[58,112],[60,120],[62,130],[62,140],[65,140],[68,136],[70,140],[70,130],[68,124],[65,124],[62,124],[60,116],[58,110],[60,104],[62,100],[65,90],[66,80],[68,72],[70,68],[72,60],[70,50],[70,40],[70,30]],
+  // Japan
+  [[32,130],[34,130],[35,132],[36,136],[36,138],[36,140],[38,140],[40,140],[42,140],[44,142],[42,143],[40,142],[38,141],[36,140],[34,138],[33,135],[32,132],[31,130],[32,130]],
+  // Australia - more detail
+  [[-14,126],[-14,130],[-13,136],[-12,136],[-13,142],[-15,142],[-16,145],[-18,146],[-20,148],[-22,150],[-25,152],[-28,154],[-30,153],[-32,152],[-34,151],[-36,150],[-38,147],[-38,146],[-38,142],[-38,140],[-36,138],[-34,137],[-32,134],[-32,128],[-28,122],[-24,114],[-22,114],[-20,116],[-18,122],[-16,124],[-14,126]],
+  // New Zealand
+  [[-34,172],[-36,174],[-38,176],[-40,176],[-42,172],[-44,168],[-46,168],[-44,170],[-42,172],[-40,175],[-38,178],[-36,176],[-34,172]],
+  // UK + Ireland
+  [[50,-5],[51,-4],[52,-4],[53,-4],[54,-4],[55,-6],[56,-6],[57,-6],[58,-4],[58,-2],[57,0],[56,0],[55,-2],[54,0],[53,0],[52,0],[51,0],[50,-2],[50,-5]],
+];
+
+const cities=[
+  [51.5,-0.1],[40.7,-74.0],[35.7,139.7],[-33.9,18.4],[1.3,103.8],
+  [48.9,2.3],[19.1,72.9],[-23.5,-46.6],[55.8,37.6],[30.0,31.2],
+  [37.8,-122.4],[-37.8,144.9],[39.9,116.4],[6.5,3.4],[25.2,55.3],
+];
+
+const conns=[
+  [0,1],[0,5],[0,8],[1,7],[1,10],[2,4],[2,12],[3,9],[3,13],
+  [4,6],[4,12],[5,9],[6,9],[7,1],[8,0],[9,14],[10,4],[11,2],[12,4],[13,3],[14,6],
+];
+
+const travellers=conns.map((_,i)=>({t:i/conns.length,conn:i,speed:0.004+Math.random()*0.003}));
+
+function drawGrid(){
+  for(let lat=-60;lat<=60;lat+=30){
+    ctx.beginPath();let first=true;
+    for(let lon=-180;lon<=180;lon+=4){
+      let[x,y,z]=ll2xyz(lat,lon,R);[x,y,z]=ry(x,y,z,rot);
+      const[px,py]=proj(x,y,z);
+      ctx.globalAlpha=z<0?0.07:0.02;
+      if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle='#CCCCCC';ctx.lineWidth=0.3;ctx.stroke();
+  }
+  for(let lon=-180;lon<180;lon+=30){
+    ctx.beginPath();let first=true;
+    for(let lat=-90;lat<=90;lat+=4){
+      let[x,y,z]=ll2xyz(lat,lon,R);[x,y,z]=ry(x,y,z,rot);
+      const[px,py]=proj(x,y,z);
+      ctx.globalAlpha=z<0?0.07:0.02;
+      if(first){ctx.moveTo(px,py);first=false;}else ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle='#CCCCCC';ctx.lineWidth=0.3;ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+}
+
+function drawLand(){
+  continents.forEach(pts=>{
+    ctx.beginPath();let started=false;
+    pts.forEach(([lat,lon])=>{
+      let[x,y,z]=ll2xyz(lat,lon,R);[x,y,z]=ry(x,y,z,rot);
+      const[px,py]=proj(x,y,z);
+      ctx.globalAlpha=z<8?0.6:0.05;
+      if(!started){ctx.moveTo(px,py);started=true;}else ctx.lineTo(px,py);
+    });
+    ctx.strokeStyle='#888888';ctx.lineWidth=1.0;ctx.stroke();
+    ctx.globalAlpha=1;
+  });
+}
+
+function arcPts(a,b){
+  let[x1,y1,z1]=ll2xyz(a[0],a[1],R);
+  let[x2,y2,z2]=ll2xyz(b[0],b[1],R);
+  [x1,y1,z1]=ry(x1,y1,z1,rot);[x2,y2,z2]=ry(x2,y2,z2,rot);
+  const mx=(x1+x2)/2,my=(y1+y2)/2,mz=(z1+z2)/2;
+  const ml=Math.sqrt(mx*mx+my*my+mz*mz);
+  const[p1x,p1y]=proj(x1,y1,z1);
+  const[p2x,p2y]=proj(x2,y2,z2);
+  const[mpx,mpy]=proj(mx/ml*R*1.22,my/ml*R*1.22,mz/ml*R*1.22);
+  return{p1x,p1y,p2x,p2y,mpx,mpy,z1,z2};
+}
+
+function drawConns(){
+  conns.forEach(([a,b])=>{
+    const{p1x,p1y,p2x,p2y,mpx,mpy,z1,z2}=arcPts(cities[a],cities[b]);
+    const vis=(z1<15)||(z2<15);
+    ctx.beginPath();ctx.moveTo(p1x,p1y);
+    ctx.quadraticCurveTo(mpx,mpy,p2x,p2y);
+    ctx.strokeStyle='#AAAAAA';ctx.lineWidth=0.5;
+    ctx.globalAlpha=vis?0.3:0.04;ctx.stroke();ctx.globalAlpha=1;
+  });
+}
+
+function drawCities(){
+  cities.forEach(city=>{
+    let[x,y,z]=ll2xyz(city[0],city[1],R);[x,y,z]=ry(x,y,z,rot);
+    const[px,py]=proj(x,y,z);
+    if(z>15)return;
+    const a=Math.max(0,Math.min(1,(15-z)/40));
+    const pulse=(Date.now()%2800)/2800;
+    ctx.beginPath();ctx.arc(px,py,2+pulse*8,0,Math.PI*2);
+    ctx.strokeStyle='#999';ctx.lineWidth=0.4;
+    ctx.globalAlpha=a*(1-pulse)*0.35;ctx.stroke();
+    ctx.beginPath();ctx.arc(px,py,2.5,0,Math.PI*2);
+    ctx.fillStyle='#777777';ctx.globalAlpha=a*0.9;ctx.fill();
+    ctx.globalAlpha=1;
+  });
+}
+
+function drawTravellers(){
+  travellers.forEach(tr=>{
+    tr.t+=tr.speed;
+    if(tr.t>1){tr.t=0;tr.conn=(tr.conn+1)%conns.length;}
+    const[a,b]=conns[tr.conn];
+    const{p1x,p1y,p2x,p2y,mpx,mpy,z1,z2}=arcPts(cities[a],cities[b]);
+    if(z1>20&&z2>20)return;
+    const t=tr.t;
+    const bx=(1-t)*(1-t)*p1x+2*(1-t)*t*mpx+t*t*p2x;
+    const by=(1-t)*(1-t)*p1y+2*(1-t)*t*mpy+t*t*p2y;
+    ctx.beginPath();ctx.arc(bx,by,2.2,0,Math.PI*2);
+    ctx.fillStyle='#555555';ctx.globalAlpha=0.75;ctx.fill();
+    ctx.globalAlpha=1;
+  });
+}
+
+function frame(){
+  ctx.clearRect(0,0,W,H);
+  rot+=0.003;
+  drawGrid();drawLand();drawConns();drawCities();drawTravellers();
+  requestAnimationFrame(frame);
+}
+frame();
+})();
+</script>
