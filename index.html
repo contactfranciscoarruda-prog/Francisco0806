@@ -946,19 +946,13 @@
     /* ── Nav + video parallax driven by Lenis ── */
     const nav    = document.getElementById('nav');
     const heroEl = document.querySelector('.hero');
-    let targetX = 0, currentX = 0;
-
     lenis.on('scroll', ({ scroll }) => {
       nav.classList.toggle('scrolled', scroll > 56);
-      const progress = Math.min(scroll / heroEl.offsetHeight, 1);
-      targetX = progress * 40;
     });
 
     /* ── rAF loop ── */
     (function loop(time) {
       lenis.raf(time);
-      currentX += (targetX - currentX) * 0.08;
-      if (heroVideo) heroVideo.style.transform = `translateX(${currentX.toFixed(2)}px)`;
       requestAnimationFrame(loop);
     })(0);
 
